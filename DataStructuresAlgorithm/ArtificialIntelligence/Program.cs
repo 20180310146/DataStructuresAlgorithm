@@ -9,56 +9,19 @@ using System.Threading.Tasks;
 namespace NewIEnumerable
 {
     /// <summary>
-    /// 对一个普通的文本文件，检索指定的关键词在文件中的数量
-    /// 练习使用迭代子 Iterator 以及其中的处理性能
+    /// 检索项目文件\temp\tempFile1.txt 中含人工智能词汇的语句，并以按“第X行，第Y个字母开始：”人工智能也将产生同样的影响…”;（字数13，超出部分使用...）,输出”
     /// </summary>
     class Program
     {
         static void Main()
         {
             var keyString = "人工智能";
-            //TestReadingFile(keyString);
-            //Console.WriteLine("---");
             TestStreamReaderEnumerable(keyString);
-
+          
             Console.ReadKey();
         }
 
-        /// <summary>
-        /// 不使用自定义的迭代子检索指定的文本文件中，包含指定字符串的个数的方法
-        /// </summary>
-        /// <param name="keyString"></param>
-        public static void TestReadingFile(string keyString)
-        {
-            var memoryBefore = GC.GetTotalMemory(true);
-            System.IO.StreamReader sr;
-            try
-            {
-                sr = File.OpenText("temp\\tempFile.txt");
-            }
-            catch (FileNotFoundException)
-            {
-                Console.WriteLine(@"这个例子需要一个名为 C:\temp\tempFile1.txt 的文件。");
-                return;
-            }
-            var fileContents = new List<string>(); // 将文本内容添加到一个 List<string> 变量
-            while (!sr.EndOfStream)
-            {
-                fileContents.Add(sr.ReadLine());
-            }
-
-            // 检索目标文本（字符串）
-            var stringsFound =
-                from line in fileContents
-                where line.Contains(keyString)
-                select line;
-
-            sr.Close();
-            Console.WriteLine("数量：" + stringsFound.Count());
-
-            var memoryAfter = GC.GetTotalMemory(false); // 检查不使用迭代子并将结果输出到控制台之后的内存用量.
-            Console.WriteLine("不使用 Iterator 的内存用量 = \t" + string.Format(((memoryAfter - memoryBefore) / 1000).ToString(), "n") + "kb");
-        }
+       
 
         /// <summary>
         /// 使用迭代子方式检索指定的文本文件中，包含指定字符串的个数的方法
@@ -72,7 +35,7 @@ namespace NewIEnumerable
             try
             {
                 stringsFound =
-                      from line in new StreamReaderEnumerable(@"temp\tempFile.txt")
+                      from line in new StreamReaderEnumerable("temp/tempFile.txt")
                       //where line.Contains(keyString)
                       select line;
 
