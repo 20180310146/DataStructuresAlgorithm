@@ -20,8 +20,7 @@ namespace CDS003.ICollectionWithGenericsDemo
         static void Main()
         {
             ///向集合添加54张扑克牌
-            ///
-
+           
             // 定义一个盒子的集合，并向其中添加一下盒子对象
             var bxList = new BoxCollection();
             bxList.Add(new Box("", "大王", 1));
