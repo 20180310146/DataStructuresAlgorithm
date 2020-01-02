@@ -57,8 +57,10 @@
     <Content Include="bin\Debug\ConsoleApplication1.pdb" />
     <Content Include="bin\Debug\ConsoleApplication1.vshost.exe" />
     <Content Include="bin\Debug\temp\tempFile.txt" />
+    <Content Include="screenshots\人工智能代码运行截图.png" />
     <Content Include="temp\tempFile.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

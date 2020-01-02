@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace CDS003.ICollectionWithGenericsDemo
 {
     /// <summary>
-    /// 相同的体积定义为相同的盒子
+    /// 相同的体积定义为相同的盒子（不懂）
     /// </summary>
     public class BoxSameVolume : EqualityComparer<Box>
     {

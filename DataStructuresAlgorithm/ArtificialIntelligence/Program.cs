@@ -17,62 +17,53 @@ namespace NewIEnumerable
         {
             var keyString = "人工智能";
             TestStreamReaderEnumerable(keyString);
-          
             Console.ReadKey();
         }
 
        
-
         /// <summary>
-        /// 使用迭代子方式检索指定的文本文件中，包含指定字符串的个数的方法
+        /// 使用迭代子方式检索指定的文本文件
         /// </summary>
         /// <param name="keyString"></param>
         public static void TestStreamReaderEnumerable(string keyString)
         {
-            var memoryBefore = GC.GetTotalMemory(true); // 检查使用迭代子之前的内存用量
             IEnumerable<String> stringsFound;
-            // 使用 StreamReaderEnumerable 打开一个示例文件，检索对应的字符串
+            // 使用 StreamReaderEnumerable 打开目标文件,并装入一个IEnumerable<String>类型变量中
             try
             {
                 stringsFound =
                       from line in new StreamReaderEnumerable("temp/tempFile.txt")
-                      //where line.Contains(keyString)
                       select line;
 
 
                 Console.WriteLine("文件名：tempFile1.txt");
-                Console.WriteLine("关键字：{0}",keyString );
+                Console.WriteLine();
+                Console.WriteLine("关键字：{0}", keyString);
+                Console.WriteLine();
+
+                //定义一个记录遍历数的变量，一行一行的遍历文本。第X行，X即遍历了第几次
                 int i = 1;
                 foreach (var w in stringsFound )
                 {
-                    if (w.Contains(keyString))
-                    {
-                        int x = w.LastIndexOf(keyString);
-                        int j = w.Length - x;
-                        if (j > 13)
-                            Console.WriteLine("第{0}行，第{1}个字母开始：{2}...", i, x + 1, w.Substring(x, 13) );
-                        if (j == 13)
-                            Console.WriteLine("第{0}行，第{1}个字母开始：{2}", i,x+1 , w.Substring(x, 13));
 
-                        if (j < 13)
-                        {
-                            Console.WriteLine("第{0}行，第{1}个字母开始：{2}", i, x + 1, w.Substring(x));
-                        }
+                    if (w.Contains(keyString))//判断行文本中是否含有“人工智能”，stringsFound中包含了tempFile.txt的所有内容
+                    {
+                        int x = w.IndexOf(keyString);//利用IndexOf属性得到“人工智能“在该行字符串中的索引值
+                        int j = w.Length - x;//计算从“人工智能”开始直到该行文本的结尾的字符数
+                        if (j > 13)
+                            Console.WriteLine("第{0}行，第{1}个字母开始：{2}...；", i, x + 1, w.Substring(x, 13) );
+                        if (j <= 13)
+                            Console.WriteLine("第{0}行，第{1}个字母开始：{2}；", i, x + 1, w.Substring(x));
                     }
                   
                     i++;
                 }
-
-                //Console.WriteLine("数量：" + stringsFound.Count());
             }
             catch (FileNotFoundException)
             {
-                Console.WriteLine(@"这个例子需要一个名为 temp\tempFile.txt 的文件。");
+                Console.WriteLine(@"这个例子需要该项目下一个名为\bin\Debug\temp\tempFile.txt 的文件。");
                 return;
             }
-
-            //var memoryAfter = GC.GetTotalMemory(false); // 检查使用迭代子并将结果输出到控制台之后的内存用量。
-            //Console.WriteLine("使用 Iterator 的内存用量 = \t" + string.Format(((memoryAfter - memoryBefore) / 1000).ToString(), "n") + "kb");
         }
 
 

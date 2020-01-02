@@ -7,10 +7,16 @@ using System.Threading.Tasks;
 namespace CDS003.ICollectionWithGenericsDemo
 {
     /// <summary>
-    /// 课程范例所需要的模型：盒子（立方体）
+    /// 扑克牌模型
     /// </summary>
     public class Box : IEquatable<Box>
     {
+        /// <summary>
+        /// 为扑克牌模型定义三个属性（花色，点数，大小）
+        /// </summary>
+        /// <param name="f"></param>
+        /// <param name="c"></param>
+        /// <param name="r"></param>
         public Box(string f, string c, int r)
         {
             this.Flower = f;
