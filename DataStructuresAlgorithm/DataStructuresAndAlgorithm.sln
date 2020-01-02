@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AboutOneHundredChickens", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnderstandingDataStructure", "UnderstandingDataStructure", "{3F930383-F9AD-4593-9439-E46155122546}"
 	ProjectSection(SolutionItems) = preProject
-		..\基础数据结构生活例子\基础数据结构生活例子.md = ..\基础数据结构生活例子\基础数据结构生活例子.md
+		DataStructuresAlgorithm\基础数据结构生活例子.md = DataStructuresAlgorithm\基础数据结构生活例子.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArtificialIntelligence", "ArtificialIntelligence\ArtificialIntelligence.csproj", "{AE4FE8EB-7D9D-47FB-A915-119CE5B79236}"
