@@ -49,7 +49,7 @@ namespace NewIEnumerable
                     if (w.Contains(keyString))//判断行文本中是否含有“人工智能”，stringsFound中包含了tempFile.txt的所有内容
                     {
                         int x = w.IndexOf(keyString);//利用IndexOf属性得到“人工智能“在该行字符串中的索引值
-                        int j = w.Length - x;//计算从“人工智能”开始直到该行文本的结尾的字符数
+                        int j = w.Length - (x+1);//计算从“人工智能”开始直到该行文本的结尾的字符数
                         if (j > 13)
                             Console.WriteLine("第{0}行，第{1}个字母开始：{2}...；", i, x + 1, w.Substring(x, 13) );
                         if (j <= 13)
