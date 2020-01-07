@@ -48,6 +48,8 @@ namespace FourCrossway
         static DateTime cardUpState;//记录上车道的开始时间
         static DateTime cardRightState;//记录右车道的开始时间
         static DateTime cardLeftState;//记录左车道的开始时间
+        static DateTime ZhulvdengxingState;//用于主干道的绿灯行时间
+
         //static int lightCount;
         static Stack<string> light;
         static Stack<string> nulllight;
@@ -64,8 +66,14 @@ namespace FourCrossway
 
         static System.Timers.Timer t1 = new System.Timers.Timer(30000);//实例化Timer类，设置间隔时间为10000毫秒；用于红绿灯的变换
         static System.Timers.Timer tsz = new System.Timers.Timer(10000);///实例化Timer类，设置间隔时间为10000毫秒；用于摇骰子
-        static System.Timers.Timer tldx = new System.Timers.Timer(5000);///实例化Timer类，设置间隔时间为5000毫秒；用于主干道绿灯行
-        static System.Timers.Timer tldxFu = new System.Timers.Timer(5000);///实例化Timer类，设置间隔时间为5000毫秒；用于支干道绿灯行
+        static System.Timers.Timer tldx = new System.Timers.Timer(4000);///实例化Timer类，设置间隔时间为5000毫秒；用于主干道绿灯行
+        static System.Timers.Timer tldxFu = new System.Timers.Timer(4000);///实例化Timer类，设置间隔时间为4000毫秒；用于支干道绿灯行
+
+///四个骰子 下上右左
+        static System.Timers.Timer szx = new System.Timers.Timer(10000);///实例化Timer类，设置间隔时间为10000毫秒；用于摇骰子
+        static System.Timers.Timer szs = new System.Timers.Timer(10000);///实例化Timer类，设置间隔时间为10000毫秒；用于摇骰子
+        static System.Timers.Timer szy = new System.Timers.Timer(10000);///实例化Timer类，设置间隔时间为10000毫秒；用于摇骰子
+        static System.Timers.Timer szz = new System.Timers.Timer(10000);///实例化Timer类，设置间隔时间为10000毫秒；用于摇骰子
 
 
         /// <summary>
@@ -380,31 +388,66 @@ namespace FourCrossway
             tcz.Start(); //启动定时器
             cardLeftState = DateTime.Now;
 
-            //骰子摇
-            //2秒后第一次调用，每1秒调用一次
-            System.Threading.Timer myTimer1 = new System.Threading.Timer(Die, "Processing timer event", 0, 10000);
-            // 第一个参数是：回调方法，表示要定时执行的方法，第二个参数是：回调方法要使用的信息的对象，或者为空引用，第三个参数是：调用 callback 之前延迟的时间量（以毫秒为单位），指定 Timeout.Infinite 以防止计时器开始计时。指定零 (0) 以立即启动计时器。第四个参数是：定时的时间时隔，以毫秒为单位
 
-            //第二个骰子
-            //2秒后第一次调用，每1秒调用一次
-            System.Threading.Timer myTimer2 = new System.Threading.Timer(Die2, "Processing timer event", 0, 10000);
-            // 第一个参数是：回调方法，表示要定时执行的方法，第二个参数是：回调方法要使用的信息的对象，或者为空引用，第三个参数是：调用 callback 之前延迟的时间量（以毫秒为单位），指定 Timeout.Infinite 以防止计时器开始计时。指定零 (0) 以立即启动计时器。第四个参数是：定时的时间时隔，以毫秒为单位
+            //4骰子初始值
+             dieList=RandomNumber(2,10);//掌控车辆下部的骰子
+         dieList2 = RandomNumber(2, 10);//掌控车辆上部的骰子
+            dieListy = RandomNumber(2, 10);//掌控车辆右部的骰子
+             dieListz = RandomNumber(2, 10);//掌控车辆左部的骰子
 
-            //支干道右部车辆的骰子
-            //2秒后第一次调用，每1秒调用一次
-            System.Threading.Timer myTimer3 = new System.Threading.Timer(Diey, "Processing timer event", 0, 10000);
-            // 第一个参数是：回调方法，表示要定时执行的方法，第二个参数是：回调方法要使用的信息的对象，或者为空引用，第三个参数是：调用 callback 之前延迟的时间量（以毫秒为单位），指定 Timeout.Infinite 以防止计时器开始计时。指定零 (0) 以立即启动计时器。第四个参数是：定时的时间时隔，以毫秒为单位
 
-            //支干道左部车辆的骰子
-            //2秒后第一次调用，每1秒调用一次
-            System.Threading.Timer myTimer4 = new System.Threading.Timer(Diez, "Processing timer event", 0, 10000);
-            // 第一个参数是：回调方法，表示要定时执行的方法，第二个参数是：回调方法要使用的信息的对象，或者为空引用，第三个参数是：调用 callback 之前延迟的时间量（以毫秒为单位），指定 Timeout.Infinite 以防止计时器开始计时。指定零 (0) 以立即启动计时器。第四个参数是：定时的时间时隔，以毫秒为单位
 
-            //掌控绿灯时下到上的（每五秒刷新一次）
+            //骰子下摇
+            szx.Elapsed += new System.Timers.ElapsedEventHandler(Die);//到达时间的时候执行事件；
+            szx.AutoReset = true;//设置是执行一次（false）还是一直执行(true)；
+            szx.Enabled = true;//是否执行System.Timers.Timer.Elapsed事件；
+            szx.Start(); //启动定时器
+
+            //骰子上摇
+            szs.Elapsed += new System.Timers.ElapsedEventHandler(Die2);//到达时间的时候执行事件；
+            szs.AutoReset = true;//设置是执行一次（false）还是一直执行(true)；
+            szs.Enabled = true;//是否执行System.Timers.Timer.Elapsed事件；
+            szs.Start(); //启动定时器
+
+            //骰子右摇
+            szy.Elapsed += new System.Timers.ElapsedEventHandler(Diey);//到达时间的时候执行事件；
+            szy.AutoReset = true;//设置是执行一次（false）还是一直执行(true)；
+            szy.Enabled = true;//是否执行System.Timers.Timer.Elapsed事件；
+            szy.Start(); //启动定时器
+
+            //骰子左摇
+            szz.Elapsed += new System.Timers.ElapsedEventHandler(Diey);//到达时间的时候执行事件；
+            szz.AutoReset = true;//设置是执行一次（false）还是一直执行(true)；
+            szz.Enabled = true;//是否执行System.Timers.Timer.Elapsed事件；
+            szz.Start(); //启动定时器
+
+
+            ////下部骰子摇
+            ////2秒后第一次调用，每1秒调用一次
+            //System.Threading.Timer myTimer1 = new System.Threading.Timer(Die, "Processing timer event", 1000, 10000);
+            //// 第一个参数是：回调方法，表示要定时执行的方法，第二个参数是：回调方法要使用的信息的对象，或者为空引用，第三个参数是：调用 callback 之前延迟的时间量（以毫秒为单位），指定 Timeout.Infinite 以防止计时器开始计时。指定零 (0) 以立即启动计时器。第四个参数是：定时的时间时隔，以毫秒为单位
+
+            ////上部骰子
+            ////2秒后第一次调用，每1秒调用一次
+            //System.Threading.Timer myTimer2 = new System.Threading.Timer(Die2, "Processing timer event", 1000, 10000);
+            //// 第一个参数是：回调方法，表示要定时执行的方法，第二个参数是：回调方法要使用的信息的对象，或者为空引用，第三个参数是：调用 callback 之前延迟的时间量（以毫秒为单位），指定 Timeout.Infinite 以防止计时器开始计时。指定零 (0) 以立即启动计时器。第四个参数是：定时的时间时隔，以毫秒为单位
+
+            ////支干道右部车辆的骰子
+            ////2秒后第一次调用，每1秒调用一次
+            //System.Threading.Timer myTimer3 = new System.Threading.Timer(Diey, "Processing timer event", 1000, 10000);
+            //// 第一个参数是：回调方法，表示要定时执行的方法，第二个参数是：回调方法要使用的信息的对象，或者为空引用，第三个参数是：调用 callback 之前延迟的时间量（以毫秒为单位），指定 Timeout.Infinite 以防止计时器开始计时。指定零 (0) 以立即启动计时器。第四个参数是：定时的时间时隔，以毫秒为单位
+
+            ////支干道左部车辆的骰子
+            ////2秒后第一次调用，每1秒调用一次
+            //System.Threading.Timer myTimer4 = new System.Threading.Timer(Diez, "Processing timer event", 1000, 10000);
+            //// 第一个参数是：回调方法，表示要定时执行的方法，第二个参数是：回调方法要使用的信息的对象，或者为空引用，第三个参数是：调用 callback 之前延迟的时间量（以毫秒为单位），指定 Timeout.Infinite 以防止计时器开始计时。指定零 (0) 以立即启动计时器。第四个参数是：定时的时间时隔，以毫秒为单位
+
+            //掌控绿灯时下到上的（每5秒刷新一次）
             tldx.Elapsed += new System.Timers.ElapsedEventHandler(lvdengxing);//到达时间的时候执行事件；
             tldx.AutoReset = true;//设置是执行一次（false）还是一直执行(true)；
             tldx.Enabled = true;//是否执行System.Timers.Timer.Elapsed事件；
             tldx.Start(); //启动定时器
+            //ZhulvdengxingState = DateTime.Now;
 
 
             //掌控绿灯时右到左的（每五秒刷新一次）
@@ -422,44 +465,72 @@ namespace FourCrossway
         /// </summary>
         /// <param name="source"></param>
         /// <param name="e"></param>
-        private static void Diez(object state)
+        //private static void Diez(object state)
+        //{
+        //    dieListz = new List<Int32>();
+        //    dieListz = RandomNumber(2, 10);
+
+        //}
+        private static void Diez(object source, ElapsedEventArgs e)
         {
+            szz.Stop(); //先关闭定时器
             dieListz = new List<Int32>();
             dieListz = RandomNumber(2, 10);
-
+            szz.Start(); //执行完毕后再开启器
         }
         /// <summary>
         /// 骰子变换（掌握主干道下部车辆的进入）
         /// </summary>
         /// <param name="source"></param>
         /// <param name="e"></param>
-        private static void Die(object state)
-        {
-            dieList = new List<Int32>();
-            dieList= RandomNumber(2, 10);
+        //private static void Die(object state)
+        //{
+        //    dieList = new List<Int32>();
+        //    dieList= RandomNumber(2, 10);
 
+        //}
+        private static void Die(object source, ElapsedEventArgs e)
+        {
+            szx.Stop(); //先关闭定时器
+            dieList = new List<Int32>();
+            dieList = RandomNumber(2, 10);
+            szx.Start(); //执行完毕后再开启器
         }
         /// <summary>
         /// 骰子变换（掌握支干道右部车辆的进入）
         /// </summary>
         /// <param name="source"></param>
         /// <param name="e"></param>
-        private static void Diey(object state)
+        //private static void Diey(object state)
+        //{
+        //    dieListy = new List<Int32>();
+        //    dieListy = RandomNumber(2, 10);
+
+        //}
+        private static void Diey(object source, ElapsedEventArgs e)
         {
+            szy.Stop(); //先关闭定时器
             dieListy = new List<Int32>();
             dieListy = RandomNumber(2, 10);
-
+            szy.Start(); //执行完毕后再开启器
         }
         /// <summary>
         /// 第二个骰子变换（掌控主干道上部车辆的移除）
         /// </summary>
         /// <param name="source"></param>
         /// <param name="e"></param>
-        private static void Die2(object state)
+        //private static void Die2(object state)
+        //{
+        //    dieList2 = new List<Int32>();
+        //    dieList2 = RandomNumber(2, 10);
+
+        //}
+        private static void Die2(object source, ElapsedEventArgs e)
         {
+            szs.Stop(); //先关闭定时器
             dieList2 = new List<Int32>();
             dieList2 = RandomNumber(2, 10);
-
+            szs.Start(); //执行完毕后再开启器
         }
 
         /// <summary>
@@ -504,7 +575,7 @@ namespace FourCrossway
             int jige1 = (DateTime.Now - cardDownState).Seconds;
             if (jige1 >= 2)
             {
-                if (dieList[0] == jige1)
+                if (dieList.Count>0&& dieList[0] == jige1)
                 { 
                     laneDown.Enqueue("车");
                     //foreach (var s in laneDown)
@@ -544,7 +615,7 @@ namespace FourCrossway
             int jige2 = (DateTime.Now - cardDownState).Seconds;
             if (jige2 >= 2)
             {
-                if (dieListy[0] == jige2)
+                if (dieListy.Count > 0 && dieListy[0] == jige2)
                 {
                     laneRight.Enqueue("车");
                     //foreach (var s in laneDown)
@@ -584,7 +655,7 @@ namespace FourCrossway
             int jige3 = (DateTime.Now - cardUpState).Seconds;
             if (jige3 >= 2 )
             {
-                if (dieList2[0] == jige3)
+                if (dieList2.Count > 0 && dieList2[0] == jige3)
                 {
                     if (laneUp.Count!=0)
                     {
@@ -628,7 +699,7 @@ namespace FourCrossway
             int jige4 = (DateTime.Now - cardLeftState).Seconds;
             if (jige4 >= 2)
             {
-                if (dieListz[0] == jige4)
+                if (dieListz.Count > 0 && dieListz[0] == jige4)
                 {
                     if (laneLeft.Count != 0)
                     {
