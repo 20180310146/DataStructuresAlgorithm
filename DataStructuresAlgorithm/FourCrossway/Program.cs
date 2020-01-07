@@ -49,6 +49,7 @@ namespace FourCrossway
         static DateTime cardRightState;//记录右车道的开始时间
         static DateTime cardLeftState;//记录左车道的开始时间
         static DateTime ZhulvdengxingState;//用于主干道的绿灯行时间
+        //static DateTime All;//用于主干道的绿灯行时间
 
         //static int lightCount;
         static Stack<string> light;
@@ -59,17 +60,18 @@ namespace FourCrossway
         static System.Timers.Timer  t = new System.Timers.Timer(1000);//实例化Timer类，设置间隔时间为10000毫秒；用于主干道红绿灯的变换
         static System.Timers.Timer tFu = new System.Timers.Timer(1000);//实例化Timer类，设置间隔时间为10000毫秒；用于支干道红绿灯的变换
 
-        static System.Timers.Timer tc = new System.Timers.Timer(1000);//实例化Timer类，设置间隔时间为10000毫秒；用于下车道内车辆的变换
-        static System.Timers.Timer tcs = new System.Timers.Timer(1000);//实例化Timer类，设置间隔时间为10000毫秒；用于上车道内车辆的变换
-        static System.Timers.Timer tcy = new System.Timers.Timer(1000);//实例化Timer类，设置间隔时间为10000毫秒；用于右车道内车辆的变换
-        static System.Timers.Timer tcz = new System.Timers.Timer(1000);//实例化Timer类，设置间隔时间为10000毫秒；用于左车道内车辆的变换
+        static System.Timers.Timer tc = new System.Timers.Timer(1000);//实例化Timer类，设置间隔时间为1000毫秒；用于下车道内车辆的变换
+        static System.Timers.Timer tcs = new System.Timers.Timer(1000);//实例化Timer类，设置间隔时间为1000毫秒；用于上车道内车辆的变换
+        static System.Timers.Timer tcy = new System.Timers.Timer(1000);//实例化Timer类，设置间隔时间为1000毫秒；用于右车道内车辆的变换
+        static System.Timers.Timer tcz = new System.Timers.Timer(1000);//实例化Timer类，设置间隔时间为1000毫秒；用于左车道内车辆的变换
+        static System.Timers.Timer All = new System.Timers.Timer(1000);//实例化Timer类，设置间隔时间为1000毫秒；程序全局刷新
 
         static System.Timers.Timer t1 = new System.Timers.Timer(30000);//实例化Timer类，设置间隔时间为10000毫秒；用于红绿灯的变换
         static System.Timers.Timer tsz = new System.Timers.Timer(10000);///实例化Timer类，设置间隔时间为10000毫秒；用于摇骰子
         static System.Timers.Timer tldx = new System.Timers.Timer(4000);///实例化Timer类，设置间隔时间为5000毫秒；用于主干道绿灯行
         static System.Timers.Timer tldxFu = new System.Timers.Timer(4000);///实例化Timer类，设置间隔时间为4000毫秒；用于支干道绿灯行
 
-///四个骰子 下上右左
+        ///四个骰子 下上右左
         static System.Timers.Timer szx = new System.Timers.Timer(10000);///实例化Timer类，设置间隔时间为10000毫秒；用于摇骰子
         static System.Timers.Timer szs = new System.Timers.Timer(10000);///实例化Timer类，设置间隔时间为10000毫秒；用于摇骰子
         static System.Timers.Timer szy = new System.Timers.Timer(10000);///实例化Timer类，设置间隔时间为10000毫秒；用于摇骰子
@@ -80,8 +82,10 @@ namespace FourCrossway
         /// 控制台显示十字路口
         /// </summary>
         /// <param name="args"></param>
-        public void Crossroad(object state)
+        //public void Crossroad(object state)
+        private static void Crossroad(object source, ElapsedEventArgs e)
         {
+            All.Stop(); //先关闭定时器
             Console.Clear();
           
 
@@ -306,8 +310,8 @@ namespace FourCrossway
                 Console.WriteLine("");
 
             }
-          
-           
+            All.Start(); //启动定时器
+
         }
         /// <summary>
         /// 构造函数
@@ -354,11 +358,19 @@ namespace FourCrossway
 
 
 
-            ///全局刷新
-            Prom p = new Prom();
-            //2秒后第一次调用，每1秒调用一次
-            System.Threading.Timer myTimer = new System.Threading.Timer(p.Crossroad, "Processing timer event", 0, 1000);
-            // 第一个参数是：回调方法，表示要定时执行的方法，第二个参数是：回调方法要使用的信息的对象，或者为空引用，第三个参数是：调用 callback 之前延迟的时间量（以毫秒为单位），指定 Timeout.Infinite 以防止计时器开始计时。指定零 (0) 以立即启动计时器。第四个参数是：定时的时间时隔，以毫秒为单位
+            /////全局刷新
+            //Prom p = new Prom();
+            ////2秒后第一次调用，每1秒调用一次
+            //System.Threading.Timer myTimer = new System.Threading.Timer(p.Crossroad, "Processing timer event", 0, 1000);
+            //// 第一个参数是：回调方法，表示要定时执行的方法，第二个参数是：回调方法要使用的信息的对象，或者为空引用，第三个参数是：调用 callback 之前延迟的时间量（以毫秒为单位），指定 Timeout.Infinite 以防止计时器开始计时。指定零 (0) 以立即启动计时器。第四个参数是：定时的时间时隔，以毫秒为单位
+
+            //全局刷新
+            All.Elapsed += new System.Timers.ElapsedEventHandler(Crossroad);//到达时间的时候执行事件；
+            All.AutoReset = true;//设置是执行一次（false）还是一直执行(true)；
+            All.Enabled = true;//是否执行System.Timers.Timer.Elapsed事件；
+            All.Start(); //启动定时器
+         
+
 
             //主车道下部车辆刷新
             tc.Elapsed += new System.Timers.ElapsedEventHandler(CardDown);//到达时间的时候执行事件；
